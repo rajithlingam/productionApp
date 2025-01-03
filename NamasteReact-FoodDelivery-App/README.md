@@ -122,8 +122,3 @@ npm start
 
 ## Contributing
 Contributions are welcome! Please feel free to raise issues, suggest improvements, or submit pull requests.
-
----
-
-## License
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
