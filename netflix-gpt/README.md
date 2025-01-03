@@ -125,8 +125,6 @@ npm run build
 
 ---
 
-## Contributing
-We welcome contributions to enhance Netflix GPT! Feel free to:
-- Submit bug reports.
-- Suggest new features.
-- Create pull requests.
+# ThankYou!
+
+---
