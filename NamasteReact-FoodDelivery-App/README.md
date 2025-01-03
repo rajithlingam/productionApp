@@ -117,8 +117,9 @@ Start the development server:
 ```bash
 npm start
 ```
-
 ---
 
-## Contributing
-Contributions are welcome! Please feel free to raise issues, suggest improvements, or submit pull requests.
+# ThankYou!
+
+
+---
