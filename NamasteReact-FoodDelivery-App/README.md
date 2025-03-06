@@ -13,17 +13,17 @@ FoodMall is a modern, responsive, and user-friendly **food ordering application*
 ## 🛠 Tech Stack  
 
 - **Frontend**: React.js, Tailwind CSS  
-- **State Management**: React Hooks (useState, useEffect, useContext)  
+- **State Management**: React Hooks (`useState`, `useEffect`, `useContext`)  
 - **API Handling**: Fetch / Axios  
 - **Routing**: React Router  
-- **Deployment**: Vercel / Netlify  
+- **Bundler**: Parcel  
 
 ## 📦 Installation & Setup  
 
 ### 1️⃣ Clone the Repository  
 ```sh
-git clone git@github.com:rajithlingam/ReactJS.git
-cd ReactJS/namasteReactjs/foodMall
+git clone https://github.com/rajithlingam/productionApp.git
+cd productionApp/NamasteReact-FoodDelivery-App
 ```
 
 ### 2️⃣ Install Dependencies  
@@ -35,7 +35,7 @@ npm install
 ```sh
 npm start
 ```
-The app will be available at `http://localhost:3000`.
+The app will be available at `http://localhost:1234`.
 
 ## 🚀 Deployment  
 
@@ -43,7 +43,7 @@ To build the project for production, use:
 ```sh
 npm run build
 ```
-Then deploy the `build/` folder to **Vercel, Netlify, or AWS**.
+Then deploy the `dist/` folder to **GitHub Pages, Vercel, or Netlify**.
 
 ## 🤝 Contribution  
 
