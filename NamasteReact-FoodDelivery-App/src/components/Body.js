@@ -1,122 +1,93 @@
-import RestaurantCard, { withPromtedLabel } from "./RestaurantCard";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
+import {API_URL_RESCARD}from "../utils/url"
+import RestaurantCard, { withPromotedResCard } from "./RestaurantCard";
 import Shimmer from "./Shimmer";
-import { Link } from "react-router-dom";
-import useOnlineStatus from "../utils/useOnlineStatus";
-import UserContext from "../utils/UserContext";
+import {Link} from "react-router"
 
 const Body = () => {
-  // Local State Variable - Super powerful variable
-  const [listOfRestaurants, setListOfRestraunt] = useState([]);
-  const [filteredRestaurant, setFilteredRestaurant] = useState([]);
+  const [resCardFilter, setResCardFilter] = useState([]);
+  const [Search, setSearch] = useState("");
+  const [FilteredSearch, setFilteredSearch] = useState([]);
 
-  const [searchText, setSearchText] = useState("");
+  const PromotedResCard = withPromotedResCard(RestaurantCard);
 
-  const RestaurantCardPromoted = withPromtedLabel(RestaurantCard);
+  console.log(resCardFilter);
+  console.log("resCardFilter");
 
-  // Whenever state variables update, react triggers a reconciliation cycle(re-renders the component)
+  const fetchObjList = async () => {
+    const API_objLink = await fetch(API_URL_RESCARD); 
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
-    const data = await fetch(
-      "https://www.swiggy.com/mapi/restaurants/list/v5?offset=0&is-seo-homepage-enabled=true&lat=13.0843007&lng=80.2704622&carousel=true&third_party_vendor=1"
+    const jsonCardData = await API_objLink.json();
+    console.log("jsonCardData");
+    console.log(jsonCardData);
+    setResCardFilter(
+      jsonCardData?.data?.cards[4].card?.card?.gridElements?.infoWithStyle?.restaurants
     );
-
-    const json = await data.json();
-
-    // Log the fetched data inside the function
-    console.log(json.data.cards.card[2].card);
-
-    // Optional Chaining to set the state with the fetched data
-    setListOfRestraunt(
-      json?.data?.cards?.card[4]?.card?.card?.gridElements?.infoWithStyle
-        ?.restaurants
-    );
-    setFilteredRestaurant(
-      json?.data?.cards?.card[4]?.card?.card?.gridElements?.infoWithStyle
-        ?.restaurants
+    setFilteredSearch(
+      jsonCardData?.data?.cards[4].card?.card?.gridElements?.infoWithStyle?.restaurants
     );
   };
 
+  useEffect(() => {
+    fetchObjList();
+  }, []);
 
-  const onlineStatus = useOnlineStatus();
-
-  if (onlineStatus === false)
-    return (
-      <h1>
-        Looks like you're offline!! Please check your internet connection;
-      </h1>
-    );
-
-  const { loggedInUser, setUserName } = useContext(UserContext);
-
-  return listOfRestaurants.length === 0 ? (
-    <Shimmer />
+  return resCardFilter == 0 ? (
+    <div className="res-container">
+      <Shimmer />
+    </div>
   ) : (
     <div className="body">
-      <div className="filter flex">
-        <div className="search m-4 p-4">
-          <input
-            type="text"
-            data-testid="searchInput"
-            className="border border-solid border-black"
-            value={searchText}
-            onChange={(e) => {
-              setSearchText(e.target.value);
-            }}
-          />
-          <button
-            className="px-4 py-2 bg-green-100 m-4 rounded-lg"
-            onClick={() => {
-              // Filter the restraunt cards and update the UI
-              // searchText
-              console.log(searchText);
+      <div className="RC-Filter">
+        <ul>
+          <li className="RCF-li">
+            <input
+              className="Search"
+              type="search"
+              name="search"
+              placeholder="Search Here..."
+              value={Search}
+              onChange={
+                (onkeyup = (e) => {
+                  setSearch(e.target.value);
+                  const searchCard = resCardFilter.filter((searchFilter) =>
+                    searchFilter.info.name
+                      .toUpperCase()
+                      .includes(Search.toUpperCase())
+                  );
+                  console.log("searchcard");
+                  console.log(searchCard);
 
-              const filteredRestaurant = listOfRestaurants.filter((res) =>
-                res.info.name.toLowerCase().includes(searchText.toLowerCase())
-              );
-
-              setFilteredRestaurant(filteredRestaurant);
-            }}
-          >
-            Search
-          </button>
-        </div>
-        <div className="search m-4 p-4 flex items-center">
-          <button
-            className="px-4 py-2 bg-gray-100 rounded-lg"
+                  setFilteredSearch(searchCard);
+                })
+              }
+            />
+          </li>
+          <li
+            className="RCF-li"
             onClick={() => {
-              const filteredList = listOfRestaurants.filter(
+              const objFilter = FilteredSearch.filter(
                 (res) => res.info.avgRating > 4
               );
-              setFilteredRestaurant(filteredList);
+              console.log(objFilter);
+              setFilteredSearch(objFilter);
             }}
           >
-            Top Rated Restaurants
-          </button>
-        </div>
-        <div className="search m-4 p-4 flex items-center">
-          <label>UserName : </label>
-          <input
-            className="border border-black p-2"
-            value={loggedInUser}
-            onChange={(e) => setUserName(e.target.value)}
-          />
-        </div>
+            Filter
+          </li>
+        </ul>
       </div>
-      <div className="flex flex-wrap">
-        {filteredRestaurant.map((restaurant) => (
-          <Link
-            key={restaurant?.info.id}
-            to={"/restaurants/" + restaurant?.info.id}
+
+      <div className="res-container">
+        {FilteredSearch.map((mapResArgument) => (
+          <Link className="Rescard-Link"
+            key={mapResArgument?.info?.id}
+            to={"/RestaurantMenu/" + mapResArgument?.info?.id}
           >
-            {restaurant?.info.promoted ? (
-              <RestaurantCardPromoted resData={restaurant?.info} />
+            {mapResArgument?.info.aggregatedDiscountInfoV3 ? (
+              <PromotedResCard resData={mapResArgument} />
             ) : (
-              <RestaurantCard resData={restaurant?.info} />
+              <RestaurantCard resData={mapResArgument} />
             )}
           </Link>
         ))}

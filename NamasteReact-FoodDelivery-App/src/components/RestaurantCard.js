@@ -1,50 +1,39 @@
-import { useContext } from "react";
-import { CDN_URL } from "../utils/constants";
-import UserContext from "../utils/UserContext";
+import { URL_CDN_LOGO } from "../utils/url";
 
 const RestaurantCard = (props) => {
   const { resData } = props;
-  const { loggedInUser } = useContext(UserContext);
+  const { cloudinaryImageId, name, cuisines, avgRating } = resData?.info;
 
-  const {
-    cloudinaryImageId,
-    name,
-    avgRating,
-    cuisines,
-    costForTwo,
-    deliveryTime,
-  } = resData;
-
+  // console.log(resData[0]);
+  //console.log(aggregatedDiscountInfoV3);
   return (
-    <div
-      data-testid="resCard"
-      className="m-4 p-4 w-[250px] rounded-lg bg-gray-100 hover:bg-gray-200"
-    >
-      <img
-        className="rounded-lg"
-        alt="res-logo"
-        src={CDN_URL + cloudinaryImageId}
-      />
-      <h3 className="font-bold py-4 text-lg">{name}</h3>
-      <h4>{cuisines.join(", ")}</h4>
-      <h4>{avgRating} stars</h4>
-      <h4>₹{costForTwo / 100} FOR TWO</h4>
-      <h4>{deliveryTime} minutes</h4>
-      <h4>User : {loggedInUser} </h4>
+    <div className="res-card">
+      <div>
+        <img
+          className="res-logo"
+          src={URL_CDN_LOGO + cloudinaryImageId}
+          alt="restaurant-logo"
+        />
+      </div>
+
+      <h3 className="res-detail">{name}</h3>
+      <h4 className="res-detail">{cuisines.join(", ")}</h4>
+      <h5 className="res-detail">{"Rating " + avgRating + " ✨"}</h5>
     </div>
   );
 };
 
-// Higher Order Component
-
-// input - RestaurantCard =>> RestaurantCardPromoted
-
-export const withPromtedLabel = (RestaurantCard) => {
+export const withPromotedResCard = (RestaurantCard) => {
   return (props) => {
+    const { resData } = props;
+    const { aggregatedDiscountInfoV3 } = resData?.info;
+
     return (
-      <div>
-        <label className="absolute bg-black text-white m-2 p-2 rounded-lg">
-          Promoted
+      <div className="Promoted-Res-Card">
+        <label className="Promoted-Res-Label">
+          {aggregatedDiscountInfoV3?.header +
+            " " +
+            aggregatedDiscountInfoV3?.subHeader}
         </label>
         <RestaurantCard {...props} />
       </div>

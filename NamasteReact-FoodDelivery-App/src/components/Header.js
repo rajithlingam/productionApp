@@ -1,60 +1,61 @@
-import { LOGO_URL } from "../utils/constants";
-import { useState, useContext } from "react";
-import { Link } from "react-router-dom";
+import { useContext, useState } from "react";
+import { Link } from "react-router";
+import { URL_LOGO } from "../utils/url";
 import useOnlineStatus from "../utils/useOnlineStatus";
 import UserContext from "../utils/UserContext";
-import { useSelector } from "react-redux";
 
 const Header = () => {
-  const [btnNameReact, setBtnNameReact] = useState("Login");
-
+  const [Log, setLog] = useState("Login");
   const onlineStatus = useOnlineStatus();
+  const { name } = useContext(UserContext);
+  const [username, setUsername] = useState(name);
 
-  const { loggedInUser } = useContext(UserContext);
-  //console.log(loggedInUser);
-
-  // Subscribing to the store using a Selector
-  const cartItems = useSelector((store) => store.cart.items);
-  //console.log(cartItems);
+  const handleLogin = () => {
+   
+    if (Log === "Login") {
+       const updateUserName = prompt("Kindly Enter Your Name");
+      setUsername(updateUserName);
+      setLog("Logout");
+    } else {
+       setUsername("Guest");
+      setLog("Login");
+    }
+  };
 
   return (
-    <div className="flex justify-between bg-pink-100 shadow-lg sm:bg-yellow-50 lg:bg-green-50">
-      <div className="logo-container">
-        <img className="w-56" src={LOGO_URL} />
-      </div>
-      <div className="flex items-center">
-        <ul className="flex p-4 m-4">
-          <li className="px-4">Online Status: {onlineStatus ? "✅" : "🔴"}</li>
-          <li className="px-4">
-            <Link to="/">Home</Link>
-          </li>
-          <li className="px-4">
-            <Link to="/about">About Us</Link>
-          </li>
-          <li className="px-4">
-            <Link to="/contact">Contact Us</Link>
-          </li>
-          <li className="px-4">
-            <Link to="/grocery">Grocery</Link>
-          </li>
-          <li className="px-4 font-bold text-xl">
-            <Link to="/cart">Cart - ({cartItems.length} items)</Link>
-          </li>
-          <button
-            className="login"
-            onClick={() => {
-              btnNameReact === "Login"
-                ? setBtnNameReact("Logout")
-                : setBtnNameReact("Login");
-            }}
-          >
-            {btnNameReact}
-          </button>
+    <UserContext.Provider value={{ name: username }}>
+      <div className="header">
+        <div className="header-logo-container">
+          <img className="header-logo" src={URL_LOGO} alt="foodmall logo" />
+        </div>
 
-          <li className="px-4 ">{loggedInUser}</li>
-        </ul>
+        <div className="nav-item">
+          <ul>
+            <li>Online Status: {onlineStatus ? "💚" : "⛔"}</li>
+
+            <Link to="/">
+              <li>Home</li>
+            </Link>
+
+            <Link to="/Cart">
+              <li>Cart</li>
+            </Link>
+
+            <Link to="/Offer">
+              <li>Offer</li>
+            </Link>
+
+            <Link to="/Account">
+              <li>Account</li>
+            </Link>
+
+            <li onClick={handleLogin}>{Log}</li>
+
+            <li>{username}</li>
+          </ul>
+        </div>
       </div>
-    </div>
+    </UserContext.Provider>
   );
 };
 
