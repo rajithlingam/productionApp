@@ -14,7 +14,7 @@ FoodMall is a modern, responsive, and user-friendly **food ordering application*
 
 - **Frontend**: React.js, Tailwind CSS  
 - **State Management**: React Hooks (`useState`, `useEffect`, `useContext`)  
-- **API Handling**: Fetch / Axios  
+- **API Handling**: Fetch
 - **Routing**: React Router  
 - **Bundler**: Parcel  
 
@@ -48,10 +48,6 @@ Then deploy the `dist/` folder to **GitHub Pages, Vercel, or Netlify**.
 ## 🤝 Contribution  
 
 Contributions are welcome! Feel free to fork the repo, report issues, or submit pull requests.
-
-## 📜 License  
-
-This project is licensed under the **MIT License**.
 
 ---
 
